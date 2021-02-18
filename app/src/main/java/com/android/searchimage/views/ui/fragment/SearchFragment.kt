@@ -2,8 +2,6 @@ package com.android.searchimage.views.ui.fragment
 
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,21 +40,12 @@ class SearchFragment : Fragment(), OnItemClickListener {
     private lateinit var searchArray: ArrayList<Hit>
     private lateinit var dialogFilter: Dialog
     private var typeValue: Int = PHOTOS
-    private var isSearchBarEmpty = true
+    private var searchQuery: String = ""
     private var lastSelected = PHOTOS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (isSearchBarEmpty) {
-            binding.btnclear.visibility = View.GONE
-        } else {
-            binding.btnclear.visibility = View.VISIBLE
-        }
     }
 
     override fun onCreateView(
@@ -77,60 +66,17 @@ class SearchFragment : Fragment(), OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         when (typeValue) {
-            PHOTOS -> viewModel.search(KEY, "", "photo")
+            PHOTOS -> viewModel.search(KEY, searchQuery, "photo")
             ILLUSTRATOR -> viewModel.search(
                 KEY,
-                "",
+                searchQuery,
                 "illustration"
             )
-            VECTOR -> viewModel.search(KEY, "", "vector")
+            VECTOR -> viewModel.search(KEY, searchQuery, "vector")
         }
         viewModel.searchData?.observe(this, WebResponseObserver())
         viewModel.isViewLoading?.observe(this, Loading())
         setClick()
-        binding.txtsearch.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(
-                s: CharSequence?, start: Int, before: Int,
-                count: Int
-            ) {
-                if (binding.txtsearch.text!!.toString().equals("", ignoreCase = true)) {
-                    isSearchBarEmpty = true
-                    binding.btnclear.visibility = View.GONE
-                    binding.imgSearch.visibility = View.VISIBLE
-                } else {
-                    isSearchBarEmpty = false
-                    when (typeValue) {
-                        PHOTOS -> viewModel.search(
-                            KEY,
-                            s.toString(),
-                            "photo"
-                        )
-                        ILLUSTRATOR -> viewModel.search(
-                            KEY,
-                            s.toString(),
-                            "illustration"
-                        )
-                        VECTOR -> viewModel.search(
-                            KEY,
-                            s.toString(),
-                            "vector"
-                        )
-                    }
-                    binding.btnclear.visibility = View.VISIBLE
-                    binding.imgSearch.visibility = View.GONE
-                }
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence?, start: Int, count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-
     }
 
     private fun setClick() {
@@ -139,19 +85,45 @@ class SearchFragment : Fragment(), OnItemClickListener {
             addFilter()
         })
 
-        binding.btnclear.setOnClickListener {
-            binding.txtsearch.setText("")
-            isSearchBarEmpty = true;
-            binding.btnclear.visibility = View.GONE
-            hideSoftKeyboard(context, binding.btnclear)
+        binding.imgSearch.setOnClickListener {
+            searchQuery = binding.txtsearch.text.toString()
+
+            binding.imgSearch.visibility = View.GONE
+            binding.btnclear.visibility = View.VISIBLE
             when (typeValue) {
-                PHOTOS -> viewModel.search(KEY, "", "photo")
+                PHOTOS -> viewModel.search(
+                    KEY,
+                    searchQuery,
+                    "photo"
+                )
                 ILLUSTRATOR -> viewModel.search(
                     KEY,
-                    "",
+                    searchQuery,
                     "illustration"
                 )
-                VECTOR -> viewModel.search(KEY, "", "vector")
+                VECTOR -> viewModel.search(
+                    KEY,
+                    searchQuery,
+                    "vector"
+                )
+            }
+        }
+
+        binding.btnclear.setOnClickListener {
+            binding.txtsearch.setText("")
+            //  isSearchBarEmpty = true
+            searchQuery = ""
+            binding.btnclear.visibility = View.GONE
+            binding.imgSearch.visibility = View.VISIBLE
+            hideSoftKeyboard(context, binding.btnclear)
+            when (typeValue) {
+                PHOTOS -> viewModel.search(KEY, searchQuery, "photo")
+                ILLUSTRATOR -> viewModel.search(
+                    KEY,
+                    searchQuery,
+                    "illustration"
+                )
+                VECTOR -> viewModel.search(KEY, searchQuery, "vector")
             }
 
         }
@@ -201,15 +173,19 @@ class SearchFragment : Fragment(), OnItemClickListener {
             dialogFilter.dismiss()
         }
         btnApply.setOnClickListener {
-
+            searchQuery = binding.txtsearch.text.toString()
+            if(searchQuery.isNotEmpty()){
+                binding.imgSearch.visibility = View.GONE
+                binding.btnclear.visibility = View.VISIBLE
+            }
             when (typeValue) {
-                PHOTOS -> viewModel.search(KEY, "", "photo")
+                PHOTOS -> viewModel.search(KEY, searchQuery, "photo")
                 ILLUSTRATOR -> viewModel.search(
                     KEY,
-                    "",
+                    searchQuery,
                     "illustration"
                 )
-                VECTOR -> viewModel.search(KEY, "", "vector")
+                VECTOR -> viewModel.search(KEY, searchQuery, "vector")
             }
             dialogFilter.dismiss()
         }

@@ -29,6 +29,8 @@
                     android:hint="Search here.."
                     android:imeOptions="actionDone"
                     android:maxLines="1"
+                    android:textCursorDrawable="@color/black"
+                    android:cursorVisible="true"
                     android:minLines="1"
                     android:paddingLeft="@dimen/_5sdp"
                     android:paddingTop="@dimen/_10sdp"
