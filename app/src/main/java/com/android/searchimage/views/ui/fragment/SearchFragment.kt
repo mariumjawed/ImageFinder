@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.GridLayout.VERTICAL
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -85,28 +86,16 @@ class SearchFragment : Fragment(), OnItemClickListener {
             addFilter()
         })
 
-        binding.imgSearch.setOnClickListener {
-            searchQuery = binding.txtsearch.text.toString()
-
-            binding.imgSearch.visibility = View.GONE
-            binding.btnclear.visibility = View.VISIBLE
-            when (typeValue) {
-                PHOTOS -> viewModel.search(
-                    KEY,
-                    searchQuery,
-                    "photo"
-                )
-                ILLUSTRATOR -> viewModel.search(
-                    KEY,
-                    searchQuery,
-                    "illustration"
-                )
-                VECTOR -> viewModel.search(
-                    KEY,
-                    searchQuery,
-                    "vector"
-                )
+        binding.txtsearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                search()
+                true
             }
+            false
+        }
+
+        binding.imgSearch.setOnClickListener {
+            search()
         }
 
         binding.btnclear.setOnClickListener {
@@ -128,6 +117,29 @@ class SearchFragment : Fragment(), OnItemClickListener {
 
         }
 
+    }
+
+    private fun search() {
+        searchQuery = binding.txtsearch.text.toString()
+        binding.imgSearch.visibility = View.GONE
+        binding.btnclear.visibility = View.VISIBLE
+        when (typeValue) {
+            PHOTOS -> viewModel.search(
+                KEY,
+                searchQuery,
+                "photo"
+            )
+            ILLUSTRATOR -> viewModel.search(
+                KEY,
+                searchQuery,
+                "illustration"
+            )
+            VECTOR -> viewModel.search(
+                KEY,
+                searchQuery,
+                "vector"
+            )
+        }
     }
 
     companion object {
