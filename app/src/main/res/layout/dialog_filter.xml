@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:padding="@dimen/_10sdp">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -46,53 +47,6 @@
 
             </RelativeLayout>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_10sdp"
-                android:text="Size:"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
-
-            <RadioGroup
-                android:id="@+id/radioGroupSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radioMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:background="@drawable/tab_background_selector"
-                    android:button="@null"
-                    android:checked="false"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="M"
-                    android:textAlignment="center"
-                    android:textColor="@drawable/checkbox_text_color"
-                    android:textSize="@dimen/_10sdp" />
-
-                <RadioButton
-                    android:id="@+id/radioLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:background="@drawable/tab_background_selector"
-                    android:button="@null"
-                    android:checked="false"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="L"
-                    android:textAlignment="center"
-                    android:textColor="@drawable/checkbox_text_color"
-                    android:textSize="@dimen/_10sdp" />
-
-
-            </RadioGroup>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
@@ -178,7 +132,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_1sdp"
                 android:background="@color/colorPrimary"
                 android:imeOptions="actionDone"
                 android:text="Apply"

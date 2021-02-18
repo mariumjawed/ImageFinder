@@ -17,7 +17,7 @@
             android:name="com.android.searchimage.views.ui.activities.MainActivity"
             android:screenOrientation="userPortrait" />
         <activity
-            android:name="com.android.searchimage.views.ui.fragment.activities.Splash"
+            android:name="com.android.searchimage.views.ui.activities.Splash"
             android:screenOrientation="userPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

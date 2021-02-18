@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/babyBlue"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{(model.valueSize == 1) ? model.previewURL : ((model.valueSize == 2) ? model.largeImageURL : model.largeImageURL)}">
+                app:imageUrl="@{model.largeImageURL}">
 
             </androidx.appcompat.widget.AppCompatImageView>
 

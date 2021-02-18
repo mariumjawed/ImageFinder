@@ -1,8 +1,5 @@
 package com.android.searchimage.constants
 
-import java.util.*
-import kotlin.collections.HashMap
-
 object WebServiceConstants {
 
     const val BASE_URL = "https://pixabay.com/"
@@ -19,11 +16,9 @@ object WebServiceConstants {
      * CONSTANTS
      */
 
-    const val SIZE_MEDIUM = 1
-    const val SIZE_LARGE = 2
-    const val SIZE_ALL = 3
     const val PHOTOS = 10
     const val ILLUSTRATOR = 20
     const val VECTOR = 30
+    const val KEY = "20297750-ce9e628a33c4058a87fa90aa1"
 
 }

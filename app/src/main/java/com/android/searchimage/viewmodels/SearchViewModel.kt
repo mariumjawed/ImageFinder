@@ -1,12 +1,9 @@
 package com.android.searchimage.viewmodels
 
 import android.annotation.SuppressLint
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.android.searchimage.constants.WebServiceConstants.PARAMS_TOKEN_EXPIRE
 import com.android.searchimage.manager.WebServiceFactory
 import com.android.searchimage.model.Hit
 import com.android.searchimage.repository.LoyaltyWrapper

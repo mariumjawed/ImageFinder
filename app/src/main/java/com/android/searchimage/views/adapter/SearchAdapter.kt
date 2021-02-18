@@ -34,21 +34,6 @@ class SearchAdapter(
         val model = arrData[i]
         with(holder) {
             bindTo(model)
-            setListener(this, model)
-        }
-    }
-
-
-    private fun setListener(holder: ViewHolder, model: Hit) {
-
-        holder.run {
-            /*inProgressCourseBind?.layoutCourse?.setOnClickListener { view ->
-
-                onItemClick.onItemClick(
-                    adapterPosition, model, view,
-                    SearchAdapter::class.java.simpleName
-                )
-            }*/
         }
     }
 

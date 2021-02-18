@@ -1,6 +1,5 @@
 package com.android.searchimage.views.ui.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -24,18 +23,5 @@ abstract class BaseActivity : AppCompatActivity() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.add(fragmentId, fragment)
             .commit()
-    }
-
-    fun openActivity(tClass: Class<*>?) {
-        val i = Intent(this, tClass)
-        startActivity(i)
-    }
-
-    fun popBackStack() {
-        if (supportFragmentManager == null) {
-            return
-        } else {
-            supportFragmentManager.popBackStack()
-        }
     }
 }

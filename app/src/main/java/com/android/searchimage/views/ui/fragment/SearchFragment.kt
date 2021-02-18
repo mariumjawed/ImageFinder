@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.GridLayout.VERTICAL
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.DataBindingUtil
@@ -18,9 +19,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.android.searchimage.R
 import com.android.searchimage.constants.WebServiceConstants.ILLUSTRATOR
+import com.android.searchimage.constants.WebServiceConstants.KEY
 import com.android.searchimage.constants.WebServiceConstants.PHOTOS
-import com.android.searchimage.constants.WebServiceConstants.SIZE_LARGE
-import com.android.searchimage.constants.WebServiceConstants.SIZE_MEDIUM
 import com.android.searchimage.constants.WebServiceConstants.VECTOR
 import com.android.searchimage.databinding.FragmentSearchBinding
 import com.android.searchimage.helper.dismissDialog
@@ -41,10 +41,9 @@ class SearchFragment : Fragment(), OnItemClickListener {
     private lateinit var searchAdapter: SearchAdapter
     private lateinit var searchArray: ArrayList<Hit>
     private lateinit var dialogFilter: Dialog
-    private var sizeValue: Int = SIZE_MEDIUM
     private var typeValue: Int = PHOTOS
     private var isSearchBarEmpty = true
-
+    private var lastSelected = PHOTOS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,13 +77,13 @@ class SearchFragment : Fragment(), OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         when (typeValue) {
-            PHOTOS -> viewModel.search("20297750-ce9e628a33c4058a87fa90aa1", "", "photo")
+            PHOTOS -> viewModel.search(KEY, "", "photo")
             ILLUSTRATOR -> viewModel.search(
-                "20297750-ce9e628a33c4058a87fa90aa1",
+                KEY,
                 "",
                 "illustration"
             )
-            VECTOR -> viewModel.search("20297750-ce9e628a33c4058a87fa90aa1", "", "vector")
+            VECTOR -> viewModel.search(KEY, "", "vector")
         }
         viewModel.searchData?.observe(this, WebResponseObserver())
         viewModel.isViewLoading?.observe(this, Loading())
@@ -101,13 +100,21 @@ class SearchFragment : Fragment(), OnItemClickListener {
                 } else {
                     isSearchBarEmpty = false
                     when (typeValue) {
-                        PHOTOS -> viewModel.search("20297750-ce9e628a33c4058a87fa90aa1", s.toString(), "photo")
+                        PHOTOS -> viewModel.search(
+                            KEY,
+                            s.toString(),
+                            "photo"
+                        )
                         ILLUSTRATOR -> viewModel.search(
-                            "20297750-ce9e628a33c4058a87fa90aa1",
+                            KEY,
                             s.toString(),
                             "illustration"
                         )
-                        VECTOR -> viewModel.search("20297750-ce9e628a33c4058a87fa90aa1", s.toString(), "vector")
+                        VECTOR -> viewModel.search(
+                            KEY,
+                            s.toString(),
+                            "vector"
+                        )
                     }
                     binding.btnclear.visibility = View.VISIBLE
                     binding.imgSearch.visibility = View.GONE
@@ -133,10 +140,20 @@ class SearchFragment : Fragment(), OnItemClickListener {
         })
 
         binding.btnclear.setOnClickListener {
-            binding.txtsearch.setText("");
+            binding.txtsearch.setText("")
             isSearchBarEmpty = true;
-            binding.btnclear.visibility = View.GONE;
+            binding.btnclear.visibility = View.GONE
             hideSoftKeyboard(context, binding.btnclear)
+            when (typeValue) {
+                PHOTOS -> viewModel.search(KEY, "", "photo")
+                ILLUSTRATOR -> viewModel.search(
+                    KEY,
+                    "",
+                    "illustration"
+                )
+                VECTOR -> viewModel.search(KEY, "", "vector")
+            }
+
         }
 
     }
@@ -161,13 +178,15 @@ class SearchFragment : Fragment(), OnItemClickListener {
         dialogFilter.show()
         val imgCloseDialog = dialogFilter.findViewById<AppCompatImageView>(R.id.imgCloseDialog)
         val btnApply = dialogFilter.findViewById<MaterialButton>(R.id.btnApply)
-        val radioGroupSize = dialogFilter.findViewById<RadioGroup>(R.id.radioGroupSize)
         val radioGroupType = dialogFilter.findViewById<RadioGroup>(R.id.radioGroupType)
-        radioGroupSize.setOnCheckedChangeListener { group, i ->
-            when (i) {
-                R.id.radioMedium -> sizeValue = SIZE_MEDIUM
-                R.id.radioLarge -> sizeValue = SIZE_LARGE
-            }
+        val radioPhotos = dialogFilter.findViewById<RadioButton>(R.id.radioPhotos)
+        val radioIllustration = dialogFilter.findViewById<RadioButton>(R.id.radioIllustration)
+        val radioVector = dialogFilter.findViewById<RadioButton>(R.id.radioVector)
+        lastSelected = typeValue
+        when (typeValue) {
+            PHOTOS -> radioPhotos.isChecked = true
+            ILLUSTRATOR -> radioIllustration.isChecked = true
+            VECTOR -> radioVector.isChecked = true
         }
 
         radioGroupType.setOnCheckedChangeListener { group, i ->
@@ -177,17 +196,20 @@ class SearchFragment : Fragment(), OnItemClickListener {
                 R.id.radioVector -> typeValue = VECTOR
             }
         }
-        imgCloseDialog.setOnClickListener { dialogFilter.dismiss() }
+        imgCloseDialog.setOnClickListener {
+            typeValue = lastSelected
+            dialogFilter.dismiss()
+        }
         btnApply.setOnClickListener {
 
             when (typeValue) {
-                PHOTOS -> viewModel.search("20297750-ce9e628a33c4058a87fa90aa1", "", "photo")
+                PHOTOS -> viewModel.search(KEY, "", "photo")
                 ILLUSTRATOR -> viewModel.search(
-                    "20297750-ce9e628a33c4058a87fa90aa1",
+                    KEY,
                     "",
                     "illustration"
                 )
-                VECTOR -> viewModel.search("20297750-ce9e628a33c4058a87fa90aa1", "", "vector")
+                VECTOR -> viewModel.search(KEY, "", "vector")
             }
             dialogFilter.dismiss()
         }
@@ -198,29 +220,7 @@ class SearchFragment : Fragment(), OnItemClickListener {
     internal inner class WebResponseObserver : Observer<LoyaltyWrapper<ArrayList<Hit>>> {
         override fun onChanged(webResponse: LoyaltyWrapper<ArrayList<Hit>>) {
             searchArray.clear()
-            when (sizeValue) {
-                SIZE_MEDIUM -> {
-                    for (item in webResponse.hits) {
-                        searchArray.add(
-                            Hit(
-                                item.previewURL, item.largeImageURL,
-                                SIZE_MEDIUM
-                            )
-                        )
-                    }
-                }
-                SIZE_LARGE -> {
-                    for (item in webResponse.hits) {
-                        searchArray.add(
-                            Hit(
-                                item.previewURL, item.largeImageURL,
-                                SIZE_LARGE
-                            )
-                        )
-                    }
-                }
-            }
-
+            searchArray.addAll(webResponse.hits)
             binding.rvImage.adapter = searchAdapter
             searchAdapter.notifyDataSetChanged()
             dismissDialog()
