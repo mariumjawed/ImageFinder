@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data class="ItemSearchBinding">
+
+        <variable
+            name="model"
+            type="com.android.searchimage.model.Hit" />
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp">
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+            android:background="@color/white"
+            android:elevation="@dimen/_5sdp"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:strokeColor="@color/babyBlue"
+            app:strokeWidth="@dimen/_1sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/babyBlue"
+                android:scaleType="centerCrop"
+                app:imageUrl="@{(model.valueSize == 1) ? model.previewURL : ((model.valueSize == 2) ? model.largeImageURL : model.largeImageURL)}">
+
+            </androidx.appcompat.widget.AppCompatImageView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
